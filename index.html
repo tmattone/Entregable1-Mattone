@@ -1,23 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset ="UTF-8">
-    <meta name="viewport" content="width=device-width, inital-scale=1.0">
-    <!--- JS -->
-    <script src="./js/main.js"></script>
-    <title> Zara </title> 
-</head>
-<style>
-     h1 {
-      font-family: Arial, sans-serif;
-      font-size: 24px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zara</title>
+  <style>
+    #productos-container {
+      float: left;
+      width: 50%;
     }
-</style>
+    #carrito-container {
+      float: left;
+      width: 40%;
+      margin-left: 10px;
+    }
+    #totalBtn {
+      display: block;
+      margin-top: 20px;
+      float: right;
+    }
+  </style>
+</head>
 <body>
-    <h1>El proyecto en si se encargara de simulador una aplicacion web
-         destinada hacia un e-commerce en donde se vendera ropa, con distintos talles, colores y gustos
-         Se implementara un carrito, un seleccionador de ropa en donde podremos finalizar nuestra compra.
 
-    </h1>
+<h1>Selección y Pago de Productos</h1>
+
+<div id="productos-container">
+  <h2>Productos</h2>
+  <div id="productos"></div>
+</div>
+<div id="carrito-container">
+  <h2>Carrito</h2>
+  <div id="carrito"></div>
+</div>
+<button onclick="calcularTotal()" id="totalBtn">Total a pagar</button>
+
+<script src="js/main.js"></script>
 </body>
 </html>
