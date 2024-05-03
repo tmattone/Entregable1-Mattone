@@ -4,37 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zara</title>
-  <style>
-    #productos-container {
-      float: left;
-      width: 50%;
-    }
-    #carrito-container {
-      float: left;
-      width: 40%;
-      margin-left: 10px;
-    }
-    #totalBtn {
-      display: block;
-      margin-top: 20px;
-      float: right;
-    }
-  </style>
+  <!-- Incluir SweetAlert CSS -->
+  <link rel="stylesheet" href="http://localhost:5500/js/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-<h1>Selección y Pago de Productos</h1>
-
-<div id="productos-container">
-  <h2>Productos</h2>
-  <div id="productos"></div>
+<h1>Zara</h1>
+<div id="main-container">
+  <div id="productos-container">
+    <h2>Productos</h2>
+    <div id="productos"></div>
+  </div>
+  <div id="carrito-container">
+    <h2>Carrito</h2>
+    <div id="cart-items"></div>
+  </div>
 </div>
-<div id="carrito-container">
-  <h2>Carrito</h2>
-  <div id="carrito"></div>
-</div>
-<button onclick="calcularTotal()" id="totalBtn">Total a pagar</button>
+<div id="cart-dropdown" style="display: none;"></div>
 
-<script src="js/main.js"></script>
+<!-- Incluir SweetAlert JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Incluir tu script principal -->
+<script src="http://localhost:5500/js/main.js"></script>
+<script src="http://localhost:5500/js/carrito.js"></script>
 </body>
 </html>

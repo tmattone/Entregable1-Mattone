@@ -1,72 +1,81 @@
 document.addEventListener('DOMContentLoaded', function() {
-    mostrarProductos(); // Mostrar productos al cargar la página
-    cargarCarrito(); // Cargar el carrito desde el localStorage
-  });
-  
-  const productos = [
-    { id: 1, nombre: "Remera", precio: 20000 },
-    { id: 2, nombre: "Pantalón", precio: 30000 },
-    { id: 3, nombre: "Zapatillas", precio: 50000 }
-  ];
-  
-  let carrito = [];
-  
-  function mostrarProductos() {
-    const productosDiv = document.getElementById('productos');
-    productosDiv.innerHTML = ''; // Limpiar el contenido anterior
-    productos.forEach(producto => {
-      const productoDiv = document.createElement('div');
-      productoDiv.innerHTML = `
-        <p>${producto.nombre} - $${producto.precio}</p>
-        <button onclick="agregarAlCarrito(${producto.id})">Agregar al carrito</button>
-      `;
-      productosDiv.appendChild(productoDiv);
+  mostrarProductos();
+});
+
+function mostrarProductos() {
+  fetch('js/productos.json') // Corregido para usar la ruta relativa adecuada
+    .then(response => response.json())
+    .then(productos => {
+      const productosDiv = document.getElementById('productos');
+      productosDiv.innerHTML = ''; // Limpiar el contenido anterior
+      productos.forEach(producto => {
+        const productoDiv = document.createElement('div');
+        productoDiv.classList.add('producto');
+        productoDiv.innerHTML = `
+          <p>${producto.nombre} - $${producto.precio}</p>
+          <img src="${producto.img}" alt="Imagen Producto ${producto.id}" class="producto-img">
+          <button class="btn btn-primary add-to-cart-btn" data-id="${producto.id}">Agregar al carrito</button>
+        `;
+        productosDiv.appendChild(productoDiv);
+      });
+
+      // Agregar listener de evento clic a cada botón de agregar al carrito
+      const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
+      addToCartBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const productId = parseInt(btn.getAttribute('data-id'));
+          agregarAlCarrito(productId);
+        });
+      });
+      
+      // Estilos para las imágenes de los productos
+      const imagenes = document.querySelectorAll('.producto-img');
+      imagenes.forEach(img => {
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.display = 'block';
+        img.style.margin = '0 auto';
+      });
+    })
+    .catch(error => {
+      console.error('Error al cargar los productos:', error);
     });
-  }
-  
-  function agregarAlCarrito(idProducto) {
-    const productoSeleccionado = productos.find(producto => producto.id === idProducto);
-    if (productoSeleccionado) {
-      const productoEnCarrito = carrito.find(item => item.id === idProducto);
-      if (productoEnCarrito) {
-        productoEnCarrito.cantidad++;
-      } else {
-        carrito.push({ ...productoSeleccionado, cantidad: 1 });
-      }
-      mostrarCarrito();
-      guardarCarrito(); // Guardar el carrito en el localStorage
-      alert(`Producto agregado al carrito: ${productoSeleccionado.nombre}`);
+}
+
+function agregarAlCarrito(idProducto) {
+  const productoSeleccionado = productos.find(producto => producto.id === idProducto);
+  if (productoSeleccionado) {
+    const productoEnCarrito = carrito.find(item => item.id === idProducto);
+    if (productoEnCarrito) {
+      productoEnCarrito.cantidad++;
     } else {
-      alert("Producto no encontrado.");
+      carrito.push({ ...productoSeleccionado, cantidad: 1 });
     }
-  }
-  
-  function mostrarCarrito() {
-    const carritoDiv = document.getElementById('carrito');
-    carritoDiv.innerHTML = ''; // Limpiar el contenido anterior
-    carrito.forEach(item => {
-      const productoDiv = document.createElement('div');
-      productoDiv.innerHTML = `<p>${item.nombre} - $${item.precio} x ${item.cantidad}</p>`;
-      carritoDiv.appendChild(productoDiv);
+    mostrarCarrito();
+    guardarCarrito(); // Guardar el carrito en el localStorage
+    // Mostrar alerta con SweetAlert
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
     });
-  }
-  
-  function calcularTotal() {
-    let total = 0;
-    carrito.forEach(item => {
-      total += item.precio * item.cantidad;
+    Toast.fire({
+      icon: "success",
+      title: "Producto Agregado"
     });
-    alert(`Total a pagar: $${total}`);
+  } else {
+    alert("Producto no encontrado.");
   }
-  
-  function guardarCarrito() {
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-  }
-  
-  function cargarCarrito() {
-    const carritoGuardado = localStorage.getItem('carrito');
-    if (carritoGuardado) {
-      carrito = JSON.parse(carritoGuardado);
-      mostrarCarrito();
-    }
-  }
+}
+
+function eliminarDelCarrito(idProducto) {
+  carrito = carrito.filter(item => item.id !== idProducto);
+  mostrarCarrito();
+  guardarCarrito();
+}
